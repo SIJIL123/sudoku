@@ -1,0 +1,199 @@
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --text: #1f2430;
+  --muted: #6b7280;
+  --line: #c9ced8;
+  --thick: #1f2430;
+  --accent: #3b6fd8;
+  --accent-soft: #dce7fb;
+  --given: #1f2430;
+  --user: #2f5fc4;
+  --error: #d64545;
+  --highlight: #eef3fd;
+  --same: #dfe7f7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161c;
+    --surface: #1d2029;
+    --text: #e6e8ee;
+    --muted: #9aa1b2;
+    --line: #3a404e;
+    --thick: #8d95a8;
+    --accent: #6d97ea;
+    --accent-soft: #263552;
+    --given: #e6e8ee;
+    --user: #8fb1ff;
+    --error: #ff7a7a;
+    --highlight: #232a3a;
+    --same: #2d3850;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+h1 { margin: 0; font-size: 1.6rem; }
+
+.controls { display: flex; gap: 8px; }
+
+select, button {
+  font: inherit;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+button:hover, select:hover { border-color: var(--accent); }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 8px 2px 12px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  background: var(--surface);
+  border: 3px solid var(--thick);
+  border-radius: 6px;
+  overflow: hidden;
+  user-select: none;
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(16px, 4.5vw, 26px);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  color: var(--user);
+  transition: background 0.1s;
+}
+
+/* thick borders for 3x3 boxes */
+.cell:nth-child(3n) { border-right: 2px solid var(--thick); }
+.cell:nth-child(9n) { border-right: none; }
+.cell:nth-child(n+19):nth-child(-n+27),
+.cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--thick); }
+.cell:nth-child(n+73) { border-bottom: none; }
+
+.cell.given { color: var(--given); font-weight: 700; }
+.cell.highlight { background: var(--highlight); }
+.cell.same { background: var(--same); }
+.cell.selected { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+.cell.error { color: var(--error); }
+
+.cell .notes {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  font-size: clamp(7px, 1.8vw, 10px);
+  color: var(--muted);
+  pointer-events: none;
+  padding: 2px;
+}
+
+.cell .notes span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.numpad button {
+  padding: 10px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.numpad button:disabled { opacity: 0.35; cursor: default; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+#notes-toggle.on {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.message {
+  min-height: 1.4em;
+  text-align: center;
+  color: var(--muted);
+  margin: 12px 0 0;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal.hidden { display: none; }
+
+.modal-box {
+  background: var(--surface);
+  color: var(--text);
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+}
+
+.modal-box h2 { margin-top: 0; }
